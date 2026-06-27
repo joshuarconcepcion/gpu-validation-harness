@@ -1,0 +1,19 @@
+# Claude Code
+CLAUDE.md
+
+# Virtual environment
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Database
+*.db
+*.sqlite
+
+# OS
+.DS_Store

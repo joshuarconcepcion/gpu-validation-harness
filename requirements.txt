@@ -1,0 +1,5 @@
+nvidia-ml-py
+fastapi
+uvicorn
+pytest
+cupy-cuda12x

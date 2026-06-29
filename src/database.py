@@ -7,7 +7,7 @@ from src.instrumentation import GPUMetrics
 DB_PATH = Path(__file__).parent.parent / "gpu_validation.db" # db file created at root
 
 
-def _connect() -> sqlite3.Connection: # helper function to eliminate .connect(DB_PATH) repitiion
+def _connect() -> sqlite3.Connection: # helper function to eliminate _connect(DB_PATH) repitiion
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row  # allows column access by name instead of index
     return conn

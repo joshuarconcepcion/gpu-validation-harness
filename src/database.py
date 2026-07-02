@@ -7,7 +7,7 @@ from src.instrumentation import GPUMetrics
 DB_PATH = Path(__file__).parent.parent / "gpu_validation.db" # db file created at root
 
 
-def _connect() -> sqlite3.Connection: # helper function to eliminate _connect(DB_PATH) repitiion
+def _connect() -> sqlite3.Connection: # helper function to eliminate .connect(DB_PATH) repetition
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row  # allows column access by name instead of index
     return conn
@@ -16,7 +16,7 @@ def _connect() -> sqlite3.Connection: # helper function to eliminate _connect(DB
 def init_db():
     with _connect() as conn:
         conn.execute("""
-            CREATE TABLE IF NOT EXISTS gpu_metrics ( 
+            CREATE TABLE IF NOT EXISTS gpu_metrics (
                 id              INTEGER PRIMARY KEY AUTOINCREMENT,
                 run_id          TEXT NOT NULL,
                 timestamp       REAL NOT NULL,
@@ -47,8 +47,19 @@ def init_db():
                 report_text TEXT NOT NULL
             )
         """)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS workload_results (
+                id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id                TEXT NOT NULL,
+                timestamp             REAL NOT NULL,
+                workload_name         TEXT NOT NULL,
+                duration_seconds      INTEGER NOT NULL,
+                operations_per_second REAL NOT NULL,
+                peak_memory_used_mb   REAL NOT NULL
+            )
+        """)
 
-
+# logs new metrics entry into existing gpu_metrics table:
 def log_metrics(run_id: str, metrics: GPUMetrics):
     with _connect() as conn:
         conn.execute("""
@@ -71,13 +82,30 @@ def log_metrics(run_id: str, metrics: GPUMetrics):
             metrics.clock_memory_mhz,
         ))
 
-
+# logs new validation result into existing validation_results table:
 def log_validation_result(run_id: str, overall_passed: bool, results: dict):
     with _connect() as conn:
         conn.execute("""
             INSERT INTO validation_results (run_id, timestamp, overall_passed, results_json)
             VALUES (?, ?, ?, ?)
         """, (run_id, time.time(), int(overall_passed), json.dumps(results)))
+
+# logs new workload results into existing workload_results table:
+def log_workload_result(run_id: str, result: dict):
+    with _connect() as conn:
+        conn.execute("""
+            INSERT INTO workload_results (
+                run_id, timestamp, workload_name,
+                duration_seconds, operations_per_second, peak_memory_used_mb
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            run_id,
+            time.time(),
+            result["workload_name"],
+            result["duration_seconds"],
+            result["operations_per_second"],
+            result["peak_memory_used_mb"],
+        ))
 
 
 def log_analyst_report(run_id: str, report: str):

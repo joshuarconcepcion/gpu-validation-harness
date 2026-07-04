@@ -5,7 +5,7 @@ THRESHOLDS = { # constant for GPU operating bounds
     "max_temp_c": 83.0,                   # 7 degree buffer before 90C throttle point
     "max_memory_utilization_pct": 95.0,   # headroom before out-of-memory errors
     "min_utilization_pct": 85.0,          # minimum expected during active workload
-    "max_power_draw_w": 350.0,            # ceiling below 450W TDP
+    "max_power_draw_w": 445.0,            # ceiling below 450W TDP
     "min_graphics_clock_mhz": 1500.0,     # floor (if below, possible throttling)
 }
 

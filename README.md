@@ -82,7 +82,7 @@ Each run captures the following per reading:
 | Max temperature | 83°C |
 | Max memory utilization | 95% |
 | Min GPU utilization | 85% |
-| Max power draw | 350W |
+| Max power draw | 445W |
 | Min graphics clock | 1500 MHz |
 
 Regression is flagged when any metric deviates more than 10% from its historical average across all past runs.

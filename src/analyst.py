@@ -60,7 +60,7 @@ def analyze_validation_run(summary: dict) -> str:
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}],
         )
-        return message.content[0].text
+        return message.content[0].text # returns content block at index 0 and pulls out string with .text
     except anthropic.APIError as e:
         raise RuntimeError(f"Anthropic API error: {e}") from e
 
